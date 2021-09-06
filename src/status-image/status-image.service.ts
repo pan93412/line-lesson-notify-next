@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { PNGStream } from 'canvas';
+import type { PNGStream, Canvas, NodeCanvasRenderingContext2D } from 'canvas';
 import { createCanvas } from 'canvas';
 
 export interface CourseConfig {
@@ -17,6 +17,18 @@ export type EndCourseConfig = CourseConfig;
 export class StatusImageService {
   fullSize = 512;
 
+  private courseImageInitiate(): [Canvas, NodeCanvasRenderingContext2D] {
+    const { fullSize } = this;
+
+    const canvas = createCanvas(fullSize, fullSize);
+    const ctx = canvas.getContext('2d', { alpha: false });
+    ctx.antialias = 'subpixel';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    return [canvas, ctx];
+  }
+
   startCourseImage({
     currentCourse,
     currentCourseTime,
@@ -26,15 +38,11 @@ export class StatusImageService {
     const { fullSize } = this;
     const topSize = 384;
     const background = 'black';
-    const bottomBackground = 'rgba(255,255,255,0.75)';
+    const bottomBackground = 'rgba(255,255,255,0.99)';
 
     // Initiate
-    const canvas = createCanvas(fullSize, fullSize);
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const [canvas, ctx] = this.courseImageInitiate();
     const canvasHalfWidth = canvas.width / 2;
-    ctx.antialias = 'subpixel';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
 
     // Background
     ctx.fillStyle = background;
@@ -45,7 +53,7 @@ export class StatusImageService {
     ctx.fillStyle = 'white';
 
     ctx.font = '16px "Noto Sans TC"';
-    ctx.fillText('本節', canvasHalfWidth, topHalfSize - 32 - 16);
+    ctx.fillText('- 上課 -', canvasHalfWidth, topHalfSize - 32 - 16);
 
     ctx.font = 'bold 64px "Noto Sans TC"';
     ctx.fillText(currentCourse, canvasHalfWidth, topHalfSize);
@@ -84,12 +92,8 @@ export class StatusImageService {
     const background = 'white';
 
     // Initiate
-    const canvas = createCanvas(fullSize, fullSize);
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const [canvas, ctx] = this.courseImageInitiate();
     const canvasHalfWidth = canvas.width / 2;
-    ctx.antialias = 'subpixel';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
 
     // Background
     ctx.fillStyle = background;
@@ -100,7 +104,7 @@ export class StatusImageService {
     ctx.fillStyle = 'black';
 
     ctx.font = '16px "Noto Sans TC"';
-    ctx.fillText('- 下課時間 -', canvasHalfWidth, topHalfSize - 32 - 16);
+    ctx.fillText('- 下課 -', canvasHalfWidth, topHalfSize - 32 - 16);
 
     ctx.font = 'bold 64px "Noto Sans TC"';
     ctx.fillText(currentCourse, canvasHalfWidth, topHalfSize);
