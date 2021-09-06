@@ -15,7 +15,7 @@ export type EndCourseConfig = CourseConfig;
 
 @Injectable()
 export class StatusImageService {
-  fullSize = 512;
+  private fullSize = 512;
 
   private courseImageInitiate(): [Canvas, NodeCanvasRenderingContext2D] {
     const { fullSize } = this;
@@ -35,7 +35,6 @@ export class StatusImageService {
     nextCourse,
   }: StartCourseConfig): PNGStream {
     // Configuration
-    const { fullSize } = this;
     const topSize = 384;
     const background = 'black';
     const bottomBackground = 'rgba(255,255,255,0.99)';
@@ -69,7 +68,7 @@ export class StatusImageService {
     ctx.fillStyle = bottomBackground;
     ctx.fillRect(0, topSize, canvas.width, canvas.height);
 
-    const bottomSize = fullSize - topSize;
+    const bottomSize = this.fullSize - topSize;
     topHalfSize = topSize + bottomSize / 2;
     ctx.fillStyle = 'black';
 
@@ -87,33 +86,29 @@ export class StatusImageService {
     currentCourseTime,
   }: EndCourseConfig): PNGStream {
     // Configuration
-    const { fullSize } = this;
-    const topSize = fullSize;
     const background = 'white';
 
     // Initiate
     const [canvas, ctx] = this.courseImageInitiate();
-    const canvasHalfWidth = canvas.width / 2;
+    const canvasHalfSize = canvas.width / 2;
 
     // Background
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    /* TOP */
-    const topHalfSize = topSize / 2;
     ctx.fillStyle = 'black';
 
     ctx.font = '16px "Noto Sans TC"';
-    ctx.fillText('- 下課 -', canvasHalfWidth, topHalfSize - 32 - 16);
+    ctx.fillText('- 下課 -', canvasHalfSize, canvasHalfSize - 32 - 16);
 
     ctx.font = 'bold 64px "Noto Sans TC"';
-    ctx.fillText(currentCourse, canvasHalfWidth, topHalfSize);
+    ctx.fillText(currentCourse, canvasHalfSize, canvasHalfSize);
 
     ctx.font = '16px "Noto Sans TC"';
     ctx.fillText(
       `下節上課時間 ${currentCourseTime.toLocaleTimeString()}`,
-      canvasHalfWidth,
-      topHalfSize + 32 + 12,
+      canvasHalfSize,
+      canvasHalfSize + 32 + 12,
     );
 
     return canvas.createPNGStream();
