@@ -23,5 +23,20 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'import/prefer-default-export': 'off',
+    '@typescript-eslint/consistent-type-imports': [
+      2,
+      {
+        prefer: 'type-imports',
+      },
+    ],
+    '@typescript-eslint/restrict-template-expressions': 0,
+    'import/order': [
+      1,
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
+      },
+    ],
+    'arrow-body-style': 2,
+    'no-void': ['error', { 'allowAsStatement': true }],
   },
 };
