@@ -2,22 +2,22 @@ import { Injectable } from '@nestjs/common';
 import type { PNGStream, Canvas, NodeCanvasRenderingContext2D } from 'canvas';
 import { createCanvas } from 'canvas';
 
-export interface CourseConfig {
-  currentCourse: string;
-  currentCourseTime: Date;
+export interface LessonConfig {
+  currentLesson: string;
+  currentLessonTime: Date;
 }
 
-export interface StartCourseConfig extends CourseConfig {
-  nextCourse: string;
+export interface LessonStartConfig extends LessonConfig {
+  nextLesson: string;
 }
 
-export type EndCourseConfig = CourseConfig;
+export type LessonDismissConfig = LessonConfig;
 
 @Injectable()
 export class StatusImageService {
   private fullSize = 512;
 
-  private courseImageInitiate(): [Canvas, NodeCanvasRenderingContext2D] {
+  private lessonImageInitiate(): [Canvas, NodeCanvasRenderingContext2D] {
     const { fullSize } = this;
 
     const canvas = createCanvas(fullSize, fullSize);
@@ -29,18 +29,18 @@ export class StatusImageService {
     return [canvas, ctx];
   }
 
-  startCourseImage({
-    currentCourse,
-    currentCourseTime,
-    nextCourse,
-  }: StartCourseConfig): PNGStream {
+  lessonStartImage({
+    currentLesson,
+    currentLessonTime,
+    nextLesson,
+  }: LessonStartConfig): PNGStream {
     // Configuration
     const topSize = 384;
     const background = 'black';
     const bottomBackground = 'rgba(255,255,255,0.99)';
 
     // Initiate
-    const [canvas, ctx] = this.courseImageInitiate();
+    const [canvas, ctx] = this.lessonImageInitiate();
     const canvasHalfWidth = canvas.width / 2;
 
     // Background
@@ -55,11 +55,11 @@ export class StatusImageService {
     ctx.fillText('- 上課 -', canvasHalfWidth, topHalfSize - 32 - 16);
 
     ctx.font = 'bold 64px "Noto Sans TC"';
-    ctx.fillText(currentCourse, canvasHalfWidth, topHalfSize);
+    ctx.fillText(currentLesson, canvasHalfWidth, topHalfSize);
 
     ctx.font = '16px "Noto Sans TC"';
     ctx.fillText(
-      `上課時間 ${currentCourseTime.toLocaleTimeString()}`,
+      `上課時間 ${currentLessonTime.toLocaleTimeString()}`,
       canvasHalfWidth,
       topHalfSize + 32 + 12,
     );
@@ -76,20 +76,20 @@ export class StatusImageService {
     ctx.fillText('下節', canvasHalfWidth, topHalfSize - 10 - 12);
 
     ctx.font = 'bold 40px "Noto Sans TC"';
-    ctx.fillText(nextCourse, canvasHalfWidth, topHalfSize + 10);
+    ctx.fillText(nextLesson, canvasHalfWidth, topHalfSize + 10);
 
     return canvas.createPNGStream();
   }
 
-  endCourseImage({
-    currentCourse,
-    currentCourseTime,
-  }: EndCourseConfig): PNGStream {
+  lessonDismissImage({
+    currentLesson,
+    currentLessonTime,
+  }: LessonDismissConfig): PNGStream {
     // Configuration
     const background = 'white';
 
     // Initiate
-    const [canvas, ctx] = this.courseImageInitiate();
+    const [canvas, ctx] = this.lessonImageInitiate();
     const canvasHalfSize = canvas.width / 2;
 
     // Background
@@ -102,11 +102,11 @@ export class StatusImageService {
     ctx.fillText('- 下課 -', canvasHalfSize, canvasHalfSize - 32 - 16);
 
     ctx.font = 'bold 64px "Noto Sans TC"';
-    ctx.fillText(currentCourse, canvasHalfSize, canvasHalfSize);
+    ctx.fillText(currentLesson, canvasHalfSize, canvasHalfSize);
 
     ctx.font = '16px "Noto Sans TC"';
     ctx.fillText(
-      `下節上課時間 ${currentCourseTime.toLocaleTimeString()}`,
+      `下節上課時間 ${currentLessonTime.toLocaleTimeString()}`,
       canvasHalfSize,
       canvasHalfSize + 32 + 12,
     );

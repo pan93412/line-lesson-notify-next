@@ -21,10 +21,10 @@ describe('StatusImageService', () => {
   describe('startCourseImage', () => {
     it('can successfully generate image without errors', () => {
       expect(
-        service.startCourseImage({
-          currentCourse: 'Course A',
-          currentCourseTime: new Date(),
-          nextCourse: 'Course B',
+        service.lessonStartImage({
+          currentLesson: 'Course A',
+          currentLessonTime: new Date(),
+          nextLesson: 'Course B',
         }),
       ).toBeInstanceOf(PNGStream);
     });
@@ -33,9 +33,9 @@ describe('StatusImageService', () => {
   describe('endCourseImage', () => {
     it('can successfully generate image without errors', () => {
       expect(
-        service.endCourseImage({
-          currentCourse: 'Course B',
-          currentCourseTime: new Date(),
+        service.lessonDismissImage({
+          currentLesson: 'Course B',
+          currentLessonTime: new Date(),
         }),
       ).toBeInstanceOf(PNGStream);
     });
