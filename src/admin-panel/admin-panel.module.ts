@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TelegrafModule } from 'nestjs-telegraf';
+import adminPanelConfig from '../config/admin-panel';
 import { AdminPanelService } from './admin-panel.service';
-import adminPanelConfig from './config/admin-panel';
 import { AdminPanelUpdate } from './admin-panel.update';
 
 @Module({
