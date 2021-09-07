@@ -38,5 +38,6 @@ module.exports = {
     ],
     'arrow-body-style': 2,
     'no-void': ['error', { 'allowAsStatement': true }],
+    'class-methods-use-this': 0,
   },
 };
