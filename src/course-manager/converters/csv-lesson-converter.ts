@@ -1,5 +1,6 @@
 import type { Readable } from 'stream';
 import parse from 'csv-parse';
+import stringify from 'csv-stringify';
 import type { LessonStructure } from '../lesson';
 import { BaseLessonConverter } from './base/base-lesson-converter';
 import { MalformedCsvEntry } from './exception/malformed-csv-entry';
@@ -73,7 +74,19 @@ export class CsvLessonConverter extends BaseLessonConverter {
     );
   }
 
-  serialize(data: LessonStructure[]): string {
-    return '';
+  async serialize(input: LessonStructure[]): Promise<string> {
+    return new Promise((resolve, reject) => {
+      stringify(
+        input,
+        {
+          header: true,
+          columns: ['day', 'subject', 'st', 'et'],
+        },
+        (error, data) => {
+          if (error) reject(error);
+          resolve(data);
+        },
+      );
+    });
   }
 }
