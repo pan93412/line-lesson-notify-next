@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/platform-fastify": "^8.0.6",
     "canvas": "^2.8.0",
+    "csv-parse": "^4.16.3",
     "eslint-config-airbnb-typescript": "^14.0.0",
     "fastify": "^3.21.0",
     "form-data": "^4.0.0",
