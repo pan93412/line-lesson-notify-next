@@ -3,7 +3,7 @@ import type { Context } from 'telegraf';
 
 @Injectable()
 export class AdminPanelService {
-  private serviceName = 'LINE Course Notify';
+  private serviceName = 'LINE Lesson Notify';
 
   private buildServiceMessage(message: string) {
     return `[${this.serviceName}] ${message}`;
