@@ -1,4 +1,4 @@
-import { Lesson } from '../parser';
+import { Lesson } from '../lesson';
 
 export const baseLesson = [
   new Lesson({

@@ -1,7 +1,7 @@
-import type { Lesson } from './parser';
 import { Lessons } from './lessons';
 import { baseLesson } from './testdata/base-lesson-tests';
 import { LessonsCrontabSuccess1 } from './testdata/lessons-crontab-success-1';
+import type { Lesson } from './lesson';
 
 describe('.LessonsCrontab', () => {
   let baseLessonTests: Lesson[] = [];

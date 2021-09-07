@@ -1,4 +1,4 @@
-import type { LessonStructure } from './lesson';
+import type { LessonStructure } from './lesson-structure';
 
 export enum LessonStatus {
   CLASS_START,

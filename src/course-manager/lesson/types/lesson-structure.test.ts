@@ -1,5 +1,5 @@
 import { ValidationError } from 'myzod';
-import { HHMMTimeSchema } from './lesson';
+import { HHMMTimeSchema } from './lesson-structure';
 
 describe('HHMMTime - Accepts', () => {
   const testset = {

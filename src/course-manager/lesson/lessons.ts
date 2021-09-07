@@ -1,9 +1,9 @@
-import type { Lesson } from './parser';
 import {
   getEntryForClassDismiss,
   getEntryForClassStart,
 } from './lessons-utils';
-import type { LessonsCrontab } from './lessons-types';
+import type { Lesson } from './lesson';
+import type { LessonsCrontab } from './types/lessons-crontab';
 
 export class Lessons {
   /**

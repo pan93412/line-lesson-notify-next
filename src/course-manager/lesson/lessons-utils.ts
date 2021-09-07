@@ -1,6 +1,9 @@
-import type { LessonsCrontabEntry, NextLessonMetadata } from './lessons-types';
-import { LessonStatus } from './lessons-types';
-import type { Lesson } from './parser';
+import type { Lesson } from './lesson';
+import type {
+  LessonsCrontabEntry,
+  NextLessonMetadata,
+} from './types/lessons-crontab';
+import { LessonStatus } from './types/lessons-crontab';
 
 function getNextLessonMetadata(nextLesson: Lesson): NextLessonMetadata {
   return {

@@ -1,43 +1,86 @@
-import type { Infer } from 'myzod';
-import myzod from 'myzod';
+import type { HHMMTime, LessonStructure } from './types/lesson-structure';
+import { InvalidHHMMTimeFormat } from './exception/invalid-hhmmtime-format';
 
-/**
- * The schema of HHMMTime.
- */
-export const HHMMTimeSchema = myzod
-  .string()
-  .pattern(/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/);
-export type HHMMTime = Infer<typeof HHMMTimeSchema>;
-
-export const LessonStructureSchema = myzod.object({
-  /**
-   * The subject name of this lesson.
-   */
-  subject: myzod.string(),
+export class Lesson {
+  constructor(private readonly lesson: LessonStructure) {}
 
   /**
-   * The week of the day when this lesson starts.
+   * Parse the `hh:mm` time to the standard cron format.
    *
-   * `0` is Sunday, `1` is Monday, ..., `6` is Saturday.
+   * We will only return the first 3 parts:
+   *
+   *   ```
+   *   Second Minute Hour DayOfMonth Month DayOfWeek
+   *   ------------------ these
+   *   ```
+   *
+   * See [node-cron's documentation](https://www.npmjs.com/package/node-cron)
+   * for more information about what the standard cron format is.
+   *
+   * @param hhmmTime The string formed in HHMMTime. See `lesson.ts`.
+   * @returns {string} `Second Minute Hour`
+   * @example ```js
+   * >>> parseHHMMTimeToCron("02:12");
+   * "0 12 2"
+   * ```
+   * @private
    */
-  weekOfDay: myzod.number().min(0).max(6),
+  private static parseHHMMTimeToCron(hhmmTime: HHMMTime): string {
+    const time = hhmmTime.split(':');
+
+    // Check if the format is valid.
+    if (time.length !== 2) throw new InvalidHHMMTimeFormat(hhmmTime);
+
+    // Convert the hour and minute parts in hhmmTime
+    // to `number`. It removes the useless leading 0.
+    const [hh, mm] = time.map(Number);
+
+    // Construct the Cron statement.
+    return `0 ${mm} ${hh}`;
+  }
+
+  private timeCron(hhmmTime: string): string {
+    const secondMinuteHour = Lesson.parseHHMMTimeToCron(hhmmTime);
+    return `${secondMinuteHour} * * ${this.WeekOfDay}`;
+  }
 
   /**
-   * When does this lesson start?
+   * Get the Cron string of this course's start time.
    *
-   * In 24-hours `hh:mm` format, your local time.
-   *
-   * @example `11:00`
+   * @example ```js
+   * >>> lesson.StartTimeCron;
+   * "* 12 12 * * 3"
+   * ```
    */
-  startAt: HHMMTimeSchema,
+  get StartTimeCron() {
+    return this.timeCron(this.StartAt);
+  }
 
   /**
-   * When does this lesson end?
+   * Get the Cron string of this course's end time.
    *
-   * In 24-hours `hh:mm` format, your local time.
-   *
-   * @example `12:00`
+   * @example ```js
+   * >>> lesson.StartTimeCron;
+   * "* 12 12 * * 3"
+   * ```
    */
-  endAt: HHMMTimeSchema,
-});
-export type LessonStructure = Infer<typeof LessonStructureSchema>;
+  get EndTimeCron() {
+    return this.timeCron(this.EndAt);
+  }
+
+  get Subject() {
+    return this.lesson.subject;
+  }
+
+  get StartAt() {
+    return this.lesson.startAt;
+  }
+
+  get EndAt() {
+    return this.lesson.endAt;
+  }
+
+  get WeekOfDay() {
+    return this.lesson.weekOfDay;
+  }
+}
