@@ -3,11 +3,11 @@ import type { ScheduledTask } from 'node-cron';
 import cron from 'node-cron';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { UndefinedEnvironmentVariable } from '../common/exception/undefined-environment-variable';
+import { UndefinedVariable } from '../common/exception/undefined-variable';
 import { CsvLessonConverter } from './converters/csv-lesson-converter';
-import { UndefinedEnvironmentVariable } from './exception/undefined-environment-variable';
 import { Lesson, Lessons, LessonStatus } from './lesson';
 import type { LessonStructure, LessonsCrontabEntry } from './lesson';
-import { UndefinedVariable } from './exception/undefined-variable';
 import { EventNotSpecified } from './exception/event-not-specified';
 
 function lessonTableToLessons(lessonTable: LessonStructure[]): Lessons {
