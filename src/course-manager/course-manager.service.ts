@@ -40,6 +40,11 @@ export class CourseManagerService {
 
   constructor(private readonly configService: ConfigService) {}
 
+  async onModuleInit() {
+    const lessonTable = await this.getLessonTable();
+    this.lessons = lessonTableToLessons(lessonTable);
+  }
+
   get OnClassStart(): CourseManagerEventHandler {
     if (!this.onClassStart) throw new EventNotSpecified('OnClassStart');
     return this.onClassStart;
@@ -80,11 +85,6 @@ export class CourseManagerService {
     const converter = new CsvLessonConverter();
     const fileStream = fs.createReadStream(this.LessonTableFilename);
     return converter.deserialize(fileStream);
-  }
-
-  async onApplicationBootstrap() {
-    const lessonTable = await this.getLessonTable();
-    this.lessons = lessonTableToLessons(lessonTable);
   }
 
   schedule(): void {
