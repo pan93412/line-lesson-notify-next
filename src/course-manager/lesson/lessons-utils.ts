@@ -1,9 +1,6 @@
 import type { Lesson } from './lesson';
-import type {
-  LessonsCrontabEntry,
-  NextLessonMetadata,
-} from './types/lessons-crontab';
-import { LessonStatus } from './types/lessons-crontab';
+import type { LessonsCrontabEntry, NextLessonMetadata } from './types';
+import { LessonStatus } from './types';
 
 function getNextLessonMetadata(nextLesson: Lesson): NextLessonMetadata {
   return {
@@ -26,6 +23,7 @@ export function getEntryForClassStart(
 ): LessonsCrontabEntry {
   return {
     subject: thisLesson.Subject,
+    startAt: thisLesson.StartAt,
     status: LessonStatus.CLASS_START,
     nextLesson: getNextLessonMetadata(nextLesson),
     cron: thisLesson.StartTimeCron,
@@ -53,6 +51,7 @@ export function getEntryForClassDismiss(
 
   return {
     subject: thisLesson.Subject,
+    startAt: thisLesson.StartAt,
     status: suitableStatus,
     nextLesson: getNextLessonMetadata(nextLesson),
     cron: thisLesson.EndTimeCron,

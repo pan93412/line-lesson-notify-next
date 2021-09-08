@@ -14,6 +14,7 @@ export interface NextLessonMetadata {
 
 export interface LessonsCrontabEntry {
   subject: LessonStructure['subject'];
+  startAt: LessonStructure['startAt'];
   status: LessonStatus;
   nextLesson: NextLessonMetadata;
   cron: string;
