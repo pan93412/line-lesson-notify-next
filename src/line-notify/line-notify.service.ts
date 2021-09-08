@@ -60,7 +60,7 @@ export class LineNotifyService {
 
   async sendWithImage(
     messageText: string,
-    imageData: Readable,
+    imageData: Buffer | Readable,
     notificationDisabled = false,
   ) {
     // Construct the form to send.
