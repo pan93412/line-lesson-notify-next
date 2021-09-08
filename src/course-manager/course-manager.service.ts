@@ -88,6 +88,9 @@ export class CourseManagerService {
   }
 
   schedule(): void {
+    // Remove all the current task schedules first.
+    this.removeScheduledTasks();
+
     this.Lessons.LessonsCrontab.forEach((lessonEntry) => {
       const scheduler = (handler: CourseManagerEventHandler) =>
         this.scheduledTasks.push(
@@ -96,12 +99,21 @@ export class CourseManagerService {
 
       switch (lessonEntry.status) {
         case LessonStatus.CLASS_START:
+          this.logger.verbose(
+            `Registering: OnClassStart of [${lessonEntry.startAt}] ${lessonEntry.subject}`,
+          );
           scheduler(this.OnClassStart);
           break;
         case LessonStatus.CLASS_DISMISS:
+          this.logger.verbose(
+            `Registering: OnClassDismiss of [${lessonEntry.startAt}] ${lessonEntry.subject}`,
+          );
           scheduler(this.OnClassDismiss);
           break;
         case LessonStatus.LAST_CLASS_DISMISS:
+          this.logger.verbose(
+            `Registering: OnLastClassDismiss of [${lessonEntry.startAt}] ${lessonEntry.subject}`,
+          );
           scheduler(this.OnLastClassDismiss);
           break;
         default:
@@ -115,7 +127,11 @@ export class CourseManagerService {
   }
 
   removeScheduledTasks() {
-    this.scheduledTasks.forEach((task) => task.destroy());
+    this.scheduledTasks.forEach((task, index) => {
+      this.logger.verbose(`Unregistering a task (order=${index}).`);
+      task.destroy();
+    });
+
     // Clear out the whole scheduledTasks.
     this.scheduledTasks.length = 0;
   }
