@@ -20,10 +20,7 @@ export class LineNotifyService {
   }
 
   private getAuthToken() {
-    const secret = this.configService.get<string | null>('LINE_SECRET');
-    if (!secret) throw new Error('LINE_SECRET is not specified.');
-
-    return secret;
+    return this.configService.get<string>('LINE_SECRET') || '';
   }
 
   private withAuthHeader(
