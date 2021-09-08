@@ -4,7 +4,7 @@ import { createCanvas } from 'canvas';
 
 export interface LessonConfig {
   currentLesson: string;
-  currentLessonTime: Date;
+  currentLessonTime: string;
 }
 
 export interface LessonStartConfig extends LessonConfig {
@@ -59,9 +59,9 @@ export class StatusImageService {
 
     ctx.font = '16px "Noto Sans TC"';
     ctx.fillText(
-      `上課時間 ${currentLessonTime.toLocaleTimeString()}`,
+      `上課時間 ${currentLessonTime}`,
       canvasHalfWidth,
-      topHalfSize + 32 + 12,
+      topHalfSize + 32 + 16,
     );
 
     /* Bottom */
@@ -106,9 +106,9 @@ export class StatusImageService {
 
     ctx.font = '16px "Noto Sans TC"';
     ctx.fillText(
-      `下節上課時間 ${currentLessonTime.toLocaleTimeString()}`,
+      `下節上課時間 ${currentLessonTime}`,
       canvasHalfSize,
-      canvasHalfSize + 32 + 12,
+      canvasHalfSize + 32 + 16,
     );
 
     return canvas.createPNGStream();
