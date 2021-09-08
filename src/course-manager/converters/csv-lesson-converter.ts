@@ -26,6 +26,9 @@ interface CsvStructure extends Record<string, string> {
  * should be in the form of `hh:mm`.
  */
 export class CsvLessonConverter extends BaseLessonConverter {
+  /**
+   * FOR USERS: do not use it. it is for internal use!
+   */
   async deserializeToCsvStructure(source: Readable): Promise<CsvStructure[]> {
     return new Promise((resolve, reject) => {
       const csvParsedData: CsvStructure[] = [];
