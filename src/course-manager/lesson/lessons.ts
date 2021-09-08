@@ -16,7 +16,9 @@ export class Lessons {
    *
    * We ensure it covered the whole WeekOfDay.
    */
-  private lessons: Lesson[][] = Array(7).fill([]);
+  private lessons: Lesson[][] = Array(7)
+    .fill(null)
+    .map(() => []);
 
   private get FlattedLesson(): Lesson[] {
     return this.lessons.flat();
