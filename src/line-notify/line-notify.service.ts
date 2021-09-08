@@ -1,24 +1,21 @@
+import type { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import FormData from 'form-data';
-import { RequestFailed } from './exceptions/request-failed';
+import axios from 'axios';
 
 type Headers = Record<string, string>;
 
-export interface SendTextResponse {
+export interface SendEndpointResponse {
   status: number;
   message: string;
 }
 
 @Injectable()
 export class LineNotifyService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
-  private static getSendTextEndpoint() {
+  private static getSendEndpoint() {
     return 'https://notify-api.line.me/api/notify';
   }
 
@@ -35,15 +32,11 @@ export class LineNotifyService {
     return { ...prevHeader, Authorization: `Bearer ${this.getAuthToken()}` };
   }
 
-  async sendText(messageText: string) {
-    // Construct the form to send.
-    const data = new FormData();
-    data.append('message', messageText);
-
+  private async commonSend(data: FormData): Promise<SendEndpointResponse> {
     // Construct the header to send
     const headers = this.withAuthHeader(data.getHeaders());
-    const response = await this.httpService.post<SendTextResponse>(
-      LineNotifyService.getSendTextEndpoint(),
+    const response = await axios.post<SendEndpointResponse>(
+      LineNotifyService.getSendEndpoint(),
       data,
       {
         headers,
@@ -51,10 +44,29 @@ export class LineNotifyService {
       },
     );
 
-    response.subscribe({
-      error(err) {
-        throw new RequestFailed(err);
-      },
-    });
+    return response.data;
+  }
+
+  async sendText(messageText: string, notificationDisabled = false) {
+    // Construct the form to send.
+    const data = new FormData();
+    data.append('message', messageText);
+    data.append('notificationDisabled', notificationDisabled.toString());
+
+    return this.commonSend(data);
+  }
+
+  async sendWithImage(
+    messageText: string,
+    imageData: Readable,
+    notificationDisabled = false,
+  ) {
+    // Construct the form to send.
+    const data = new FormData();
+    data.append('message', messageText);
+    data.append('imageFile', imageData);
+    data.append('notificationDisabled', notificationDisabled.toString());
+
+    return this.commonSend(data);
   }
 }
