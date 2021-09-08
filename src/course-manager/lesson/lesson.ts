@@ -1,4 +1,4 @@
-import type { HHMMTime, LessonStructure } from './types/lesson-structure';
+import type { HHMMTime, LessonStructure } from './types';
 import { InvalidHHMMTimeFormat } from './exception/invalid-hhmmtime-format';
 
 export class Lesson {
@@ -49,7 +49,7 @@ export class Lesson {
    *
    * @example ```js
    * >>> lesson.StartTimeCron;
-   * "* 12 12 * * 3"
+   * "0 12 12 * * 3"
    * ```
    */
   get StartTimeCron() {
@@ -61,7 +61,7 @@ export class Lesson {
    *
    * @example ```js
    * >>> lesson.StartTimeCron;
-   * "* 12 12 * * 3"
+   * "0 12 12 * * 3"
    * ```
    */
   get EndTimeCron() {
