@@ -20,11 +20,13 @@ export class AppService {
       this.logger.log(`onClassStart - (${startAt}) ${subject}`);
       await this.lineNotifyService.sendWithImage(
         `-> 開始上課。本節是${subject}。`,
-        this.statusImageService.lessonStartImage({
-          currentLesson: subject,
-          currentLessonTime: startAt,
-          nextLesson: nextLesson.subject,
-        }),
+        this.statusImageService
+          .lessonStartImage({
+            currentLesson: subject,
+            currentLessonTime: startAt,
+            nextLesson: nextLesson.subject,
+          })
+          .toBuffer('image/png'),
       );
     };
 
@@ -33,10 +35,12 @@ export class AppService {
       this.logger.log(`onClassDismiss - (${startAt}) ${subject}`);
       await this.lineNotifyService.sendWithImage(
         `-> 下課時間。下節是${subject}。`,
-        this.statusImageService.lessonDismissImage({
-          currentLesson: subject,
-          currentLessonTime: startAt,
-        }),
+        this.statusImageService
+          .lessonDismissImage({
+            currentLesson: subject,
+            currentLessonTime: startAt,
+          })
+          .toBuffer('image/png'),
       );
     };
 
@@ -45,10 +49,12 @@ export class AppService {
       this.logger.log(`onLastClassDismiss - (${startAt}) ${subject}`);
       await this.lineNotifyService.sendWithImage(
         `-> 本日課程結束。${chineseWeekOfDay(weekOfDay)}第一節是${subject}。`,
-        this.statusImageService.lessonDismissImage({
-          currentLesson: subject,
-          currentLessonTime: startAt,
-        }),
+        this.statusImageService
+          .lessonDismissImage({
+            currentLesson: subject,
+            currentLessonTime: startAt,
+          })
+          .toBuffer('image/png'),
       );
     };
 

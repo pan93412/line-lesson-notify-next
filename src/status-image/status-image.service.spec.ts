@@ -1,6 +1,6 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PNGStream } from 'canvas';
+import { Canvas } from 'canvas';
 import { StatusImageService } from './status-image.service';
 
 describe('StatusImageService', () => {
@@ -18,26 +18,26 @@ describe('StatusImageService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('startCourseImage', () => {
+  describe('lessonStartImage', () => {
     it('can successfully generate image without errors', () => {
       expect(
         service.lessonStartImage({
           currentLesson: 'Course A',
-          currentLessonTime: new Date(),
+          currentLessonTime: '10:00',
           nextLesson: 'Course B',
         }),
-      ).toBeInstanceOf(PNGStream);
+      ).toBeInstanceOf(Canvas);
     });
   });
 
-  describe('endCourseImage', () => {
+  describe('lessonDismissImage', () => {
     it('can successfully generate image without errors', () => {
       expect(
         service.lessonDismissImage({
           currentLesson: 'Course B',
-          currentLessonTime: new Date(),
+          currentLessonTime: '11:00',
         }),
-      ).toBeInstanceOf(PNGStream);
+      ).toBeInstanceOf(Canvas);
     });
   });
 });

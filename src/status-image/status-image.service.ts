@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { PNGStream, Canvas, NodeCanvasRenderingContext2D } from 'canvas';
+import type { Canvas, NodeCanvasRenderingContext2D } from 'canvas';
 import { createCanvas } from 'canvas';
 
 export interface LessonConfig {
@@ -33,7 +33,7 @@ export class StatusImageService {
     currentLesson,
     currentLessonTime,
     nextLesson,
-  }: LessonStartConfig): PNGStream {
+  }: LessonStartConfig): Canvas {
     // Configuration
     const topSize = 384;
     const background = 'black';
@@ -78,13 +78,13 @@ export class StatusImageService {
     ctx.font = 'bold 40px "Noto Sans TC"';
     ctx.fillText(nextLesson, canvasHalfWidth, topHalfSize + 10);
 
-    return canvas.createPNGStream();
+    return canvas;
   }
 
   lessonDismissImage({
     currentLesson,
     currentLessonTime,
-  }: LessonDismissConfig): PNGStream {
+  }: LessonDismissConfig): Canvas {
     // Configuration
     const background = 'white';
 
@@ -111,6 +111,6 @@ export class StatusImageService {
       canvasHalfSize + 32 + 16,
     );
 
-    return canvas.createPNGStream();
+    return canvas;
   }
 }
