@@ -27,7 +27,5 @@ describe('.LessonsCrontab', () => {
     lessons.LessonsCrontab.forEach(({ cron: cronStatement }) =>
       expect(cron.validate(cronStatement)).toBeTruthy(),
     );
-
-    expect(lessons.LessonsCrontab).toStrictEqual(LessonsCrontabSuccess1);
   });
 });
