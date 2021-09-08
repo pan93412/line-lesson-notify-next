@@ -3,5 +3,6 @@ import { StatusImageService } from './status-image.service';
 
 @Module({
   providers: [StatusImageService],
+  exports: [StatusImageService],
 })
 export class StatusImageModule {}

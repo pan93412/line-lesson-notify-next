@@ -9,12 +9,19 @@ import { AdminPanelUpdate } from './admin-panel.update';
   imports: [
     TelegrafModule.forRootAsync({
       imports: [ConfigModule.forFeature(adminPanelConfig)],
-      useFactory: async (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const token = configService.get<string>('TELEGRAM_BOT_TOKEN');
+
+        if (!token) throw new Error('TELEGRAM_BOT_TOKEN did not specified');
+
+        return {
+          token,
+        };
+      },
       inject: [ConfigService],
     }),
   ],
   providers: [AdminPanelUpdate, AdminPanelService],
+  exports: [AdminPanelService],
 })
 export class AdminPanelModule {}
