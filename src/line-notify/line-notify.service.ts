@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import FormData from 'form-data';
 import axios from 'axios';
+import { UndefinedEnvironmentVariable } from '../common/exception/undefined-environment-variable';
 
 type Headers = Record<string, string>;
 
@@ -19,8 +20,12 @@ export class LineNotifyService {
     return 'https://notify-api.line.me/api/notify';
   }
 
-  private getAuthToken() {
-    return this.configService.get<string>('LINE_SECRET') || '';
+  private getAuthToken(): string {
+    const LINE_SECRET = this.configService.get<string>('LINE_SECRET');
+
+    if (!LINE_SECRET) throw new UndefinedEnvironmentVariable('LINE_SECRET');
+
+    return LINE_SECRET;
   }
 
   private withAuthHeader(
