@@ -3,7 +3,9 @@ import {
   getEntryForClassStart,
 } from './lessons-utils';
 import type { Lesson } from './lesson';
-import type { LessonsCrontab } from './types/lessons-crontab';
+import type { LessonsCrontab } from './types';
+import { NoSuchAWeekOfDay } from './exception/no-such-a-week-of-day';
+import { LessonOutOfRange } from './exception/lesson-out-of-range';
 
 export class Lessons {
   /**
@@ -20,6 +22,13 @@ export class Lessons {
     return this.lessons.flat();
   }
 
+  getLessonsOfThatDay(weekOfDay: number): Lesson[] {
+    const lessonsOfThatDay = this.lessons[weekOfDay];
+
+    if (lessonsOfThatDay) return lessonsOfThatDay;
+    throw new NoSuchAWeekOfDay(weekOfDay);
+  }
+
   /**
    * Push a lesson.
    *
@@ -29,9 +38,7 @@ export class Lessons {
    * @return {Lessons} Lessons. You can chain `.pushLesson`.
    */
   pushLesson(lesson: Lesson): this {
-    const weekOfDay = lesson.WeekOfDay;
-    this.lessons[weekOfDay].push(lesson);
-
+    this.getLessonsOfThatDay(lesson.WeekOfDay).push(lesson);
     return this;
   }
 
@@ -44,7 +51,7 @@ export class Lessons {
    */
   removeLesson(lesson: Lesson): this {
     const weekOfDay = lesson.WeekOfDay;
-    this.lessons[weekOfDay] = this.lessons[weekOfDay].filter(
+    this.lessons[weekOfDay] = this.getLessonsOfThatDay(lesson.WeekOfDay).filter(
       (lEntry) => lEntry !== lesson,
     );
 
@@ -67,6 +74,9 @@ export class Lessons {
       // Next lesson.
       const nextLessonIndex = i + 1 >= flattedLesson.length ? 0 : i + 1;
       const nextLesson = flattedLesson[nextLessonIndex];
+
+      if (!(thisLesson && nextLesson))
+        throw new LessonOutOfRange(i, nextLessonIndex, flattedLesson.length);
 
       const args: [Lesson, Lesson] = [thisLesson, nextLesson];
       lessonsCrontab.push(
