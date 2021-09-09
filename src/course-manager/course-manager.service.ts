@@ -127,12 +127,11 @@ export class CourseManagerService {
   }
 
   removeScheduledTasks() {
-    this.scheduledTasks.forEach((task, index) => {
+    this.scheduledTasks = this.scheduledTasks.filter((task, index) => {
       this.logger.verbose(`Unregistering a task (order=${index}).`);
-      task.destroy();
-    });
 
-    // Clear out the whole scheduledTasks.
-    this.scheduledTasks.length = 0;
+      task.stop();
+      return false;
+    });
   }
 }
