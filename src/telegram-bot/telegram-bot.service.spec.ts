@@ -2,11 +2,11 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import adminPanelConfig from '../config/admin-panel';
-import { AdminPanelService } from './admin-panel.service';
+import adminPanelConfig from '../config/telegram-bot';
+import { TelegramBotService } from './telegram-bot.service';
 
-describe('AdminPanelService', () => {
-  let service: AdminPanelService;
+describe('TelegramBotService', () => {
+  let service: TelegramBotService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,15 +17,15 @@ describe('AdminPanelService', () => {
             ConfigModule.forFeature(adminPanelConfig),
           ],
           useFactory: async (configService: ConfigService) => ({
-            token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+            token: configService.get<string>('TELEGRAM_BOT_TOKEN') || '',
           }),
           inject: [ConfigService],
         }),
       ],
-      providers: [AdminPanelService],
+      providers: [TelegramBotService],
     }).compile();
 
-    service = module.get<AdminPanelService>(AdminPanelService);
+    service = module.get<TelegramBotService>(TelegramBotService);
   });
 
   it('should be defined', () => {

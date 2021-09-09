@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { Context } from 'telegraf';
 
 @Injectable()
-export class AdminPanelService {
+export class TelegramBotService {
   private serviceName = 'LINE Lesson Notify';
 
   private buildServiceMessage(message: string) {

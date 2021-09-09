@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TelegrafModule } from 'nestjs-telegraf';
-import adminPanelConfig from '../config/admin-panel';
+import telegramBotConfiguration from '../config/telegram-bot';
 import { UndefinedEnvironmentVariable } from '../common/exception/undefined-environment-variable';
-import { AdminPanelService } from './admin-panel.service';
-import { AdminPanelUpdate } from './admin-panel.update';
+import { TelegramBotService } from './telegram-bot.service';
+import { TelegramBotUpdate } from './telegram-bot.update';
 
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
-      imports: [ConfigModule.forFeature(adminPanelConfig)],
+      imports: [ConfigModule.forFeature(telegramBotConfiguration)],
       useFactory: async (configService: ConfigService) => {
         const token = configService.get<string>('TELEGRAM_BOT_TOKEN');
 
@@ -23,7 +23,7 @@ import { AdminPanelUpdate } from './admin-panel.update';
       inject: [ConfigService],
     }),
   ],
-  providers: [AdminPanelUpdate, AdminPanelService],
-  exports: [AdminPanelService],
+  providers: [TelegramBotUpdate, TelegramBotService],
+  exports: [TelegramBotService],
 })
-export class AdminPanelModule {}
+export class TelegramBotModule {}
