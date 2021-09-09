@@ -8,6 +8,19 @@ export class BroadcastService {
   private registeredService: BroadcastServiceProvider[] = [];
 
   addService(service: BroadcastServiceProvider): void {
+    const hasRegistered =
+      this.registeredService.filter(
+        (registeredService) =>
+          registeredService.ServiceId === service.ServiceId,
+      ).length >= 1;
+
+    if (hasRegistered) {
+      this.logger.warn(
+        `${service.ServiceId} has registered. Don't register it twice!`,
+      );
+      return;
+    }
+
     this.registeredService.push(service);
     this.logger.log(`Service added: ${service.ServiceName}`);
   }
