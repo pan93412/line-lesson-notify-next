@@ -1,6 +1,6 @@
 {
   "name": "line-lesson-notify-next",
-  "version": "0.0.1",
+  "version": "1.0.0-beta.1",
   "description": "A lesson reminder for LINE with the ability to administrate in Telegram.",
   "author": "pan93412 <pan93412@gmail.com>",
   "private": true,
