@@ -25,7 +25,7 @@ export class AppService {
       .addService(this.telegramNotifyBroadcast);
   }
 
-  private async scheduleClass() {
+  private async setCourseManagerEventHandlers() {
     this.courseManagerService.onClassStart = async (meta) => {
       const { subject, startAt } = meta;
       this.logger.log(`onClassStart - (${startAt}) ${subject}`);
@@ -51,8 +51,6 @@ export class AppService {
         )
         .catch(this.logger.error);
     };
-
-    this.courseManagerService.schedule();
   }
 
   private async addCommandListeners() {
@@ -73,8 +71,10 @@ export class AppService {
   async onApplicationBootstrap() {
     await Promise.all([
       this.registerBroadcastProviders(),
-      this.scheduleClass(),
+      this.setCourseManagerEventHandlers(),
       this.addCommandListeners(),
     ]);
+
+    this.courseManagerService.schedule();
   }
 }
