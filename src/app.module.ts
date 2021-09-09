@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TelegramBotModule } from './telegram-bot/telegram-bot.module';
 import { LineNotifyModule } from './line-notify/line-notify.module';
@@ -15,7 +14,6 @@ import { BroadcastModule } from './broadcast/broadcast.module';
     CourseManagerModule,
     BroadcastModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
