@@ -4,6 +4,8 @@ import { chineseWeekOfDay } from './course-manager/lesson/lesson-utils';
 import { BroadcastService } from './broadcast/broadcast.service';
 import { LineNotifyBroadcast } from './line-notify/line-notify.broadcast';
 import { TelegramBotBroadcast } from './telegram-bot/telegram-bot.broadcast';
+import { TelegramBotEvents } from './telegram-bot/types/telegram-bot-events';
+import { TelegramBotService } from './telegram-bot/telegram-bot.service';
 
 @Injectable()
 export class AppService {
@@ -14,6 +16,7 @@ export class AppService {
     private readonly broadcastService: BroadcastService,
     private readonly lineNotifyBroadcast: LineNotifyBroadcast,
     private readonly telegramNotifyBroadcast: TelegramBotBroadcast,
+    private readonly telegramNotifyService: TelegramBotService,
   ) {}
 
   private async registerBroadcastProviders() {
@@ -52,10 +55,26 @@ export class AppService {
     this.courseManagerService.schedule();
   }
 
+  private async addCommandListeners() {
+    this.telegramNotifyService.on(TelegramBotEvents.DISABLE_REMINDER, () => {
+      this.logger.log(
+        'Received disable_reminder event from TelegramNotifyService.',
+      );
+      this.courseManagerService.removeScheduledTasks();
+    });
+    this.telegramNotifyService.on(TelegramBotEvents.ENABLE_REMINDER, () => {
+      this.logger.log(
+        'Received enable_reminder event from TelegramNotifyService.',
+      );
+      this.courseManagerService.schedule();
+    });
+  }
+
   async onApplicationBootstrap() {
     await Promise.all([
       this.registerBroadcastProviders(),
       this.scheduleClass(),
+      this.addCommandListeners(),
     ]);
   }
 }
