@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AdminPanelModule } from './admin-panel/admin-panel.module';
 import { LineNotifyModule } from './line-notify/line-notify.module';
 import { CourseManagerModule } from './course-manager/course-manager.module';
+import { BroadcastModule } from './broadcast/broadcast.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CourseManagerModule } from './course-manager/course-manager.module';
     AdminPanelModule,
     LineNotifyModule,
     CourseManagerModule,
+    BroadcastModule,
   ],
   controllers: [AppController],
   providers: [AppService],
