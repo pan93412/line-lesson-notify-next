@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type { BroadcastServiceProvider } from './broadcast-service-provider';
+import type { SendMessageOptions } from './types/send-message-options';
 
 @Injectable()
 export class BroadcastService {
@@ -7,7 +8,7 @@ export class BroadcastService {
 
   private registeredService: BroadcastServiceProvider[] = [];
 
-  addService(service: BroadcastServiceProvider): void {
+  addService(service: BroadcastServiceProvider): this {
     const hasRegistered =
       this.registeredService.filter(
         (registeredService) =>
@@ -18,14 +19,15 @@ export class BroadcastService {
       this.logger.warn(
         `${service.ServiceId} has registered. Don't register it twice!`,
       );
-      return;
+      return this;
     }
 
     this.registeredService.push(service);
-    this.logger.log(`Service added: ${service.ServiceName}`);
+    this.logger.verbose(`Service added: ${service.ServiceName}`);
+    return this;
   }
 
-  removeService(serviceId: string): void {
+  removeService(serviceId: string): this {
     let removedService: BroadcastServiceProvider | undefined;
 
     this.registeredService = this.registeredService.filter((inService) => {
@@ -38,13 +40,21 @@ export class BroadcastService {
     if (removedService)
       this.logger.log(`Service removed: ${removedService?.ServiceName}`);
     else this.logger.warn(`This service ID wasn't added: ${serviceId}`);
+
+    return this;
   }
 
-  async sendTextMessage(message: string): Promise<void> {
+  async sendTextMessage(
+    message: string,
+    options?: SendMessageOptions,
+  ): Promise<void> {
     await Promise.all(
-      this.registeredService.map(async (service) =>
-        service.sendTextMessage(message),
-      ),
+      this.registeredService.map(async (service) => {
+        this.logger.log(
+          `Sending text message with "${service.ServiceName}" service...`,
+        );
+        await service.sendTextMessage(message, options);
+      }),
     );
   }
 }

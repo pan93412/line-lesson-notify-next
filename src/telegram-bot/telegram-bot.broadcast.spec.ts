@@ -3,10 +3,12 @@ import { Test } from '@nestjs/testing';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import telegramBotConfig from '../config/telegram-bot';
+import type { BroadcastServiceProvider } from '../broadcast/broadcast-service-provider';
+import { TelegramBotBroadcast } from './telegram-bot.broadcast';
 import { TelegramBotService } from './telegram-bot.service';
 
-describe('TelegramBotService', () => {
-  let service: TelegramBotService;
+describe('TelegramBotBroadcast', () => {
+  let service: BroadcastServiceProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,10 +26,10 @@ describe('TelegramBotService', () => {
           inject: [ConfigService],
         }),
       ],
-      providers: [TelegramBotService],
+      providers: [TelegramBotService, TelegramBotBroadcast],
     }).compile();
 
-    service = module.get<TelegramBotService>(TelegramBotService);
+    service = module.get<TelegramBotBroadcast>(TelegramBotBroadcast);
   });
 
   it('should be defined', () => {
@@ -35,5 +37,8 @@ describe('TelegramBotService', () => {
   });
 
   it('should has the ability to send a text message', async () =>
-    service.sendTextMessageToManagementGroup('hello, world\\!'));
+    service.sendTextMessage('hello, world\\!'));
+
+  it('should has the ability to send a text message when passing object', async () =>
+    service.sendTextMessage('hello, world\\!', {}));
 });
