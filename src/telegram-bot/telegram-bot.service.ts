@@ -1,18 +1,22 @@
+import EventEmitter from 'events';
 import { Injectable } from '@nestjs/common';
 import type { Context } from 'telegraf';
 import { Telegraf } from 'telegraf';
 import { InjectBot } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
 import { ManagementChatNotSpecified } from './exceptions/management-chat-not-specified';
+import { TelegramBotEvents } from './types/telegram-bot-events';
 
 @Injectable()
-export class TelegramBotService {
+export class TelegramBotService extends EventEmitter {
   private serviceName = 'LINE Lesson Notify';
 
   constructor(
     @InjectBot() private bot: Telegraf<Context>,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    super();
+  }
 
   private buildServiceMessage(message: string) {
     return `[${this.serviceName}] ${message}`;
@@ -49,11 +53,13 @@ export class TelegramBotService {
   async disableReminder(ctx: Context): Promise<void> {
     if (!(await this.isPermitted(ctx))) return;
     await ctx.reply(this.buildServiceMessage('已經提出停止運作要求。'));
+    this.emit(TelegramBotEvents.DISABLE_REMINDER);
   }
 
   async enableReminder(ctx: Context): Promise<void> {
     if (!(await this.isPermitted(ctx))) return;
     await ctx.reply(this.buildServiceMessage('已經提出繼續運作要求。'));
+    this.emit(TelegramBotEvents.ENABLE_REMINDER);
   }
 
   async sendTextMessageToChat(chatId: number, message: string) {
