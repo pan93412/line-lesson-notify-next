@@ -4,6 +4,7 @@ import type { Context } from 'telegraf';
 import { Telegraf } from 'telegraf';
 import { InjectBot } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
+import type { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { ManagementChatNotSpecified } from './exceptions/management-chat-not-specified';
 import { TelegramBotEvents } from './types/telegram-bot-events';
 
@@ -62,16 +63,21 @@ export class TelegramBotService extends EventEmitter {
     this.emit(TelegramBotEvents.ENABLE_REMINDER);
   }
 
-  async sendTextMessageToChat(chatId: number, message: string) {
-    return this.bot.telegram.sendMessage(chatId, message, {
-      parse_mode: 'MarkdownV2',
-    });
+  async sendTextMessageToChat(
+    chatId: number,
+    message: string,
+    extra?: ExtraReplyMessage,
+  ) {
+    return this.bot.telegram.sendMessage(chatId, message, extra);
   }
 
-  async sendTextMessageToManagementGroup(message: string) {
+  async sendTextMessageToManagementGroup(
+    message: string,
+    extra?: ExtraReplyMessage,
+  ) {
     const managementChat = this.ManagementChat;
     if (!managementChat) throw new ManagementChatNotSpecified();
 
-    return this.sendTextMessageToChat(managementChat, message);
+    return this.sendTextMessageToChat(managementChat, message, extra);
   }
 }
