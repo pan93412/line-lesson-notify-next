@@ -24,7 +24,7 @@ export class LineNotifyBroadcast extends BroadcastServiceProvider {
     await this.lineNotifyService.sendText(
       message,
       // notificationDisabled should be the negative of enableNotification!
-      options?.enableNotification ?? false,
+      !(options?.enableNotification ?? true),
     );
   }
 }
