@@ -30,7 +30,9 @@ export class AppService {
       const { subject, startAt } = meta;
       this.logger.log(`onClassStart - (${startAt}) ${subject}`);
       await this.broadcastService
-        .sendTextMessage(`📖 開始上課。本節是${subject}。`)
+        .sendTextMessage(`📖 開始上課。本節是${subject}。`, {
+          enableNotification: false,
+        })
         .catch(this.logger.error);
     };
 
@@ -38,7 +40,9 @@ export class AppService {
       const { subject, startAt } = meta.nextLesson;
       this.logger.log(`onClassDismiss - (${startAt}) ${subject}`);
       await this.broadcastService
-        .sendTextMessage(`✅ 下課時間。下節是${subject}。`)
+        .sendTextMessage(`✅ 下課時間。下節是${subject}。`, {
+          enableNotification: false,
+        })
         .catch(this.logger.error);
     };
 
@@ -48,6 +52,9 @@ export class AppService {
       await this.broadcastService
         .sendTextMessage(
           `👍 本日課程結束。${chineseWeekOfDay(weekOfDay)}第一節是${subject}。`,
+          {
+            enableNotification: false,
+          },
         )
         .catch(this.logger.error);
     };
